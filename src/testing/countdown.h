@@ -2,4 +2,4 @@
 #include <pthread.h>
 #include "../countdown/countdown.h"
 
-#define NUM_THREADS 5
+#define NUM_THREADS 50

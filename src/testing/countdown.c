@@ -2,8 +2,9 @@
 
 void* countdown_test(void* arg) {
     countdown_t* cd = (countdown_t*)arg;
-    
-    // Do some work...
+
+    printf("Thread %lu started\n", (unsigned long)pthread_self());
+
     for (int i = 0; i < 1000000; i++) {
         int j = i * i;
         j--;
@@ -11,9 +12,8 @@ void* countdown_test(void* arg) {
     
     countdown_wait(cd);  // Wait until the countdown reaches zero
     
-    // Continue with other tasks after countdown
+    printf("Thread %lu finished\n", (unsigned long)pthread_self());
     
-    printf("Thread finished\n");
     return NULL;
 }
 

@@ -1,0 +1,38 @@
+CC := gcc
+CFLAGS := -Wall -Wextra -pthread
+
+SRCDIR := src
+BINDIR := bin
+
+# List of source files
+POOL_SRC := $(SRCDIR)/thread_pool/pool.c
+THREAD_POOL_TEST_SRC := $(SRCDIR)/testing/pool.c
+
+# Object files
+POOL_OBJ := $(BINDIR)/pool.o
+THREAD_POOL_TEST_OBJ := $(BINDIR)/thread_pool_test.o
+
+# Executable target
+THREAD_POOL_TEST_TARGET := $(BINDIR)/thread_pool_test
+
+# Build rule
+all: thread_pool_test
+
+thread_pool_test: $(THREAD_POOL_TEST_TARGET)
+
+$(THREAD_POOL_TEST_TARGET): $(THREAD_POOL_TEST_OBJ) $(POOL_OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
+
+$(POOL_OBJ): $(POOL_SRC)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(THREAD_POOL_TEST_OBJ): $(THREAD_POOL_TEST_SRC)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+clean_obj:
+	rm -f $(POOL_OBJ) $(THREAD_POOL_TEST_OBJ)
+
+clean:
+	rm -f $(THREAD_POOL_TEST_TARGET) $(POOL_OBJ) $(THREAD_POOL_TEST_OBJ)
+
+.PHONY: all clean

@@ -21,6 +21,11 @@ int threadpool_init(threadpool_t *tp, int queueDim, int nthreads) {
         return -1;
     }
 
+    if (pthread_mutex_init(&(tp->queueLock), NULL) != 0) {
+        perror("pthread_mutex_init");
+        return -1;
+    }
+
     if (pthread_cond_init(&(tp->notify), NULL) != 0) {
         perror("pthread_cond_init");
         return -1;
@@ -37,7 +42,7 @@ int threadpool_init(threadpool_t *tp, int queueDim, int nthreads) {
     return 0;
 }
 
-void *threadpool_thread (void *threadpool) {
+void *threadpool_thread(void *threadpool) {
     threadpool_t *tp = (threadpool_t *) threadpool;
     work_t work;
 
@@ -49,45 +54,54 @@ void *threadpool_thread (void *threadpool) {
         }
 
         if (tp->shutdown) {
+            pthread_mutex_unlock(&(tp->lock));
             break;
         }
 
+        pthread_mutex_lock(&(tp->queueLock));
         work.function = tp->queue[tp->queueHead].function;
         work.args = tp->queue[tp->queueHead].args;
         tp->queueHead = (tp->queueHead + 1) % tp->queueSize;
         tp->queueCount--;
+        pthread_mutex_unlock(&(tp->queueLock));
 
         pthread_mutex_unlock(&(tp->lock));
 
         (*(work.function))(work.args);
+
+        free(work.args); // Free the memory allocated for task arguments
     }
 
     tp->started--;
 
-    pthread_mutex_unlock(&(tp->lock));
     pthread_exit(NULL);
     return NULL;
 }
-int threadpool_submit (threadpool_t *tp, wi_function_t func, void *args) {
-    pthread_mutex_lock(&(tp->lock));
+
+int threadpool_submit(threadpool_t *tp, wi_function_t func, void *args) {
+    pthread_mutex_lock(&(tp->queueLock));
 
     if (tp->queueCount == tp->queueSize) {
-        pthread_mutex_unlock(&(tp->lock));
+        pthread_mutex_unlock(&(tp->queueLock));
         return -1;
     }
 
     tp->queue[tp->queueTail].function = func;
-    tp->queue[tp->queueTail].args = args;
+
+    // Allocate memory for task arguments and copy the content
+    tp->queue[tp->queueTail].args = malloc(sizeof(void*));
+    memcpy(tp->queue[tp->queueTail].args, args, sizeof(void*));
+
     tp->queueTail = (tp->queueTail + 1) % tp->queueSize;
     tp->queueCount++;
 
     pthread_cond_signal(&(tp->notify));
-    pthread_mutex_unlock(&(tp->lock));
+    pthread_mutex_unlock(&(tp->queueLock));
 
     return 0;
 }
 
-int threadpool_destroy (threadpool_t *tp) {
+int threadpool_destroy(threadpool_t *tp) {
     pthread_mutex_lock(&(tp->lock));
 
     if (tp->shutdown) {
@@ -108,8 +122,8 @@ int threadpool_destroy (threadpool_t *tp) {
     free(tp->queue);
 
     pthread_mutex_destroy(&(tp->lock));
+    pthread_mutex_destroy(&(tp->queueLock));
     pthread_cond_destroy(&(tp->notify));
 
     return 0;
 }
-
