@@ -1,5 +1,5 @@
 #include "vector.h"
-#include <limits.h>
+
 
 void find_larger_and_fill_parallel(int v[], int dim, int numberOfThreads) {
     int i;
@@ -12,6 +12,9 @@ void find_larger_and_fill_parallel(int v[], int dim, int numberOfThreads) {
 
     int numThreads = (numberOfThreads > dim) ? dim : numberOfThreads; // Adjust the number of threads so numThreads <= dim
     printf("Number of threads: %d\n", numThreads);
+    // Calculate the number of elements each thread should process
+    int elementsPerThread = dim / numThreads;
+
     // Initialize the barrier
     sot_barrier_t barrier;
     sot_barrier_init(&barrier, numThreads);
@@ -26,12 +29,27 @@ void find_larger_and_fill_parallel(int v[], int dim, int numberOfThreads) {
         printf("Error allocating memory for thread data\n");
         exit(1);
     }
+    int startIndex = 0;
     for (i = 0; i < numThreads; i++) {
+        // Set the start and end indices for each thread
+        int endIndex = startIndex + elementsPerThread;
+        if (i == numThreads - 1) {
+            // The last thread should process any remaining elements
+            endIndex = dim;
+        }
+
+        // Assign the data for each thread
         data[i].max_value = max_value;
         data[i].v = vec;
         data[i].barrier = &barrier;
+        data[i].startIndex = startIndex;
+        data[i].endIndex = endIndex;
+
+        // Create the thread
         pthread_create(&threads[i], NULL, find_larger_and_fill_parallel_thread, &data[i]);
-        printf("Thread %d created, size of portion: %d\n", i, dim / numThreads);
+
+        // Update the start index for the next thread
+        startIndex = endIndex;
     }
 
     for (i = 0; i < numThreads; i++) {
@@ -53,15 +71,17 @@ void find_larger_and_fill_parallel(int v[], int dim, int numberOfThreads) {
     free(data);
 }
 
+
 void *find_larger_and_fill_parallel_thread(void *arg) {
     thread_data *data = (thread_data *)arg;
     int max_value = data->max_value;
     vector *v = data->v;
-    int vector_size = v->size;
+    int startIndex = data->startIndex;
+    int endIndex = data->endIndex;
     sot_barrier_t *barrier = data->barrier;
     int i;
-    printf("Thread started, vector_size: %d\n", vector_size );
-    for (i = 0; i < vector_size; i++) {
+    printf("Thread started, startIndex: %d, endIndex: %d\n", startIndex, endIndex);
+    for (i = startIndex; i < endIndex; i++) {
         if (v->data[i] > max_value) {
             max_value = v->data[i];
         }

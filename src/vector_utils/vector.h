@@ -1,4 +1,5 @@
 #include "../sot_barrier/sot_barrier.h"
+#include <limits.h>
 
 // define vector struct
 // size is the number of elements in the vector
@@ -12,6 +13,8 @@ typedef struct {
 typedef struct {
     int thread_count;
     int max_value;
+    int startIndex;
+    int endIndex;
     sot_barrier_t *barrier;
     vector *v;
 } thread_data;

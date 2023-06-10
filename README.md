@@ -51,24 +51,21 @@ Teste do Exercicio 2:
 
     Consiste em codigo que cria um vetor de tamanho vector_size e o preenche com numeros aleatorios entre 0 e 999.
 
-    Exemplo (vector_size = 1000, nthreads = 10):
-        .....
-        Thread 0: 0 0 0 0 0 0 0 0 0 0
-        Thread 1: 0 0 0 0 0 0 0 0 0 0
-        Thread 2: 0 0 0 0 0 0 0 0 0 0
-        Thread 3: 0 0 0 0 0 0 0 0 0 0
-        Thread 4: 0 0 0 0 0 0 0 0 0 0
-        Thread 5: 0 0 0 0 0 0 0 0 0 0
-        Thread 6: 0 0 0 0 0 0 0 0 0 0
-        Thread 7: 0 0 0 0 0 0 0 0 0 0
-        Thread 8: 0 0 0 0 0 0 0 0 0 0
-        Thread 9: 0 0 0 0 0 0 0 0 0 0
-        .......
-        *
-        No momento em que a thread 9, que nesta iteração foi a ultima a chegar, todas as threads passem pela barreira logo a seguir.
-
-
-        // to complete up
+    Exemplo (vector_size = 100, nthreads = 10):
+       ./bin/vector_test 100 10
+        Input: 811 84 335 925 358 718 40 404 888 41 753 244 54 902 158 965 249 925 697 529 219 788 875 228 75 660 971 143 747 177 213 22 229 384 324 760 170 294 9 541 199 528 769 788 514 628 76 81 633 716 426 465 56 993 707 868 520 532 175 59 780 311 472 798 743 512 466 928 601 350 828 426 109 620 387 433 90 173 765 867 352 877 490 278 451 316 824 479 827 468 754 321 402 596 296 370 446 154 83 406 
+        Number of threads: 10
+        Thread started, startIndex: 0, endIndex: 10
+        Thread started, startIndex: 10, endIndex: 20
+        Thread started, startIndex: 20, endIndex: 30
+        Thread started, startIndex: 30, endIndex: 40
+        Thread started, startIndex: 40, endIndex: 50
+        Thread started, startIndex: 50, endIndex: 60
+        Thread started, startIndex: 60, endIndex: 70
+        Thread started, startIndex: 70, endIndex: 80
+        Thread started, startIndex: 80, endIndex: 90
+        Thread started, startIndex: 90, endIndex: 100
+        Output: 993 ... 993 
 
 Exercicio 3:
     Path: Trabalho_3/src/countdown/*
