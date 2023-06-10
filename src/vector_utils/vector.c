@@ -10,17 +10,28 @@ void find_larger_and_fill_parallel(int v[], int dim, int numberOfThreads) {
         vec->data[i] = v[i];
     }
 
-    int numThreads = (numberOfThreads > dim) ? dim : numberOfThreads; // Adjust the number of threads
+    int numThreads = (numberOfThreads > dim) ? dim : numberOfThreads; // Adjust the number of threads so numThreads <= dim
+    printf("Number of threads: %d\n", numThreads);
+    // Initialize the barrier
     sot_barrier_t barrier;
     sot_barrier_init(&barrier, numThreads);
 
     pthread_t *threads = malloc(numThreads * sizeof(pthread_t));
+    if (threads == NULL) {
+        printf("Error allocating memory for threads\n");
+        exit(1);
+    }
     thread_data *data = malloc(numThreads * sizeof(thread_data));
+    if (data == NULL) {
+        printf("Error allocating memory for thread data\n");
+        exit(1);
+    }
     for (i = 0; i < numThreads; i++) {
         data[i].max_value = max_value;
         data[i].v = vec;
         data[i].barrier = &barrier;
         pthread_create(&threads[i], NULL, find_larger_and_fill_parallel_thread, &data[i]);
+        printf("Thread %d created, size of portion: %d\n", i, dim / numThreads);
     }
 
     for (i = 0; i < numThreads; i++) {
@@ -49,7 +60,7 @@ void *find_larger_and_fill_parallel_thread(void *arg) {
     int vector_size = v->size;
     sot_barrier_t *barrier = data->barrier;
     int i;
-
+    printf("Thread started, vector_size: %d\n", vector_size );
     for (i = 0; i < vector_size; i++) {
         if (v->data[i] > max_value) {
             max_value = v->data[i];
