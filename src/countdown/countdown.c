@@ -3,18 +3,20 @@
 int countdown_init    (countdown_t *cd, int initialValue) {
     if(initialValue < 0) return -1; // error
     cd->value = initialValue;
-
+    // Initialize the barrier
     if (sot_barrier_init(&cd->barrier, initialValue) != 0) return -1; // error
 
     return 0;
 }
 
 int countdown_destroy (countdown_t *cd) {
+    // Destroy the barrier
     if (sot_barrier_destroy(&cd->barrier) != 0) return -1; // error
     return 0;
 }
 
 int countdown_wait(countdown_t *cd) {
+    // Wait for the barrier to reach 0 with threads locking and unlocking the mutex
     pthread_mutex_lock(&cd->barrier.mutex);
     cd->value--;
 
@@ -29,6 +31,7 @@ int countdown_wait(countdown_t *cd) {
 }
 
 int countdown_down(countdown_t *cd) {
+    // Decrement the barrier
     pthread_mutex_lock(&cd->barrier.mutex);
     cd->value--;
 
