@@ -3,10 +3,13 @@
 #include <pthread.h>
 #include "../sot_barrier/sot_barrier.h"
 
-#define NUM_THREADS 20
-#define NUM_ITERATIONS 1
-
+// barrier to be used
 sot_barrier_t barrier;
-pthread_t threads[NUM_THREADS];
 
+// function thread that will execute
+// the barrier will be reached when all threads have finished their computation
+// simple arithemtic computation res *= i*i
 void* thread_function(void* arg);
+
+// simple function to dump a value, avoid compiler optimization warning
+int valueDump(int value);
