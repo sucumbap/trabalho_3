@@ -145,3 +145,53 @@ Teste do Exercicio 4:
         Thread exiting
         Thread pool destroyed
 
+Exercicio 5:
+    Path: Trabalho_3/src/matrix/matrix.c && Trabalho_3/src/matrix/matrix.h && Trabalho_3/src/matrix/matrix_pool.c
+    Compile: make
+    Run: ./bin/matrix_test <rows M1> <columns M1> <rows M2> <columns M2> <nThreads>
+
+    Consiste numa biblioteca de funções que operam sobre matrizes de inteiros.
+    Requer a biblioteca do exercicio 4 para funcionar.
+    Neste caso utiliza-se um pool de threads para realizar as operações de multiplicção sobre as matrizes.
+
+Teste do Exercicio 5:
+
+    Cria duas matrixes de interios com dimensões M1xM2 e M2xM3 e preenche-as com numeros aleatorios entre 0 e 999.
+    Multiplica as duas matrizes e imprime o resultado.
+
+    Exemplo:
+        ./bin/matrix_test 10 10 10 10 10
+        M1-> (10, 10)
+        M2-> (10, 10)
+        0383 0886 0777 0915 0793 0335 0386 0492 0649 0421 
+        0362 0027 0690 0059 0763 0926 0540 0426 0172 0736 
+        0211 0368 0567 0429 0782 0530 0862 0123 0067 0135 
+        0929 0802 0022 0058 0069 0167 0393 0456 0011 0042 
+        0229 0373 0421 0919 0784 0537 0198 0324 0315 0370 
+        0413 0526 0091 0980 0956 0873 0862 0170 0996 0281 
+        0305 0925 0084 0327 0336 0505 0846 0729 0313 0857 
+        0124 0895 0582 0545 0814 0367 0434 0364 0043 0750 
+        0087 0808 0276 0178 0788 0584 0403 0651 0754 0399 
+        0932 0060 0676 0368 0739 0012 0226 0586 0094 0539 
+
+        0795 0570 0434 0378 0467 0601 0097 0902 0317 0492 
+        0652 0756 0301 0280 0286 0441 0865 0689 0444 0619 
+        0440 0729 0031 0117 0097 0771 0481 0675 0709 0927 
+        0567 0856 0497 0353 0586 0965 0306 0683 0219 0624 
+        0528 0871 0732 0829 0503 0019 0270 0368 0708 0715 
+        0340 0149 0796 0723 0618 0245 0846 0451 0921 0555 
+        0379 0488 0764 0228 0841 0350 0193 0500 0034 0764 
+        0124 0914 0987 0856 0743 0491 0227 0365 0859 0936 
+        0432 0551 0437 0228 0275 0407 0474 0121 0858 0395 
+        0029 0237 0235 0793 0818 0428 0143 0011 0928 0529 
+        Waiting for threads to finish...
+        Thread exiting
+        Thread exiting
+        .....
+        Thread exiting
+
+        Result-> (10, 10)
+        ...
+
+
+Exercicio 6:

@@ -238,6 +238,9 @@ Matrix* matrix_multiplication_with_pool_threads(Matrix* m1, Matrix* m2, int nPar
     int rowsPerThread = result->nRows / nPartitions;
     int extraRows = result->nRows % nPartitions;
     int currentRow = 0;
+	int queueSize = nPartitions * 2;
+
+	threadpool_init(tp, queueSize, nPartitions);
 
     for (int i = 0; i < nPartitions; ++i) {
         ThreadData* threadData = malloc(sizeof(ThreadData));
@@ -254,7 +257,7 @@ Matrix* matrix_multiplication_with_pool_threads(Matrix* m1, Matrix* m2, int nPar
 
         threadpool_submit(tp, matrix_multiply_thread_wrapper, (void*)threadData);
     }
-
+	printf("Waiting for threads to finish...\n");
     threadpool_destroy(tp);
 
     return result;

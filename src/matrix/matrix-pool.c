@@ -5,7 +5,7 @@
  */
 void print_usage (char *binName)
 {
-    printf("\nusage: %s <rows M1> <columns M1> <rows M2> <columns M2> <nProcesses>\n\n", binName);
+    printf("\nusage: %s <rows M1> <columns M1> <rows M2> <columns M2> <nThreads>\n\n", binName);
 }
 
 
@@ -36,10 +36,11 @@ int main (int argc, char *argv[])
 	printf("M1-> (%d, %d)\n", nRows1, nColumns1);
     printf("M2-> (%d, %d)\n", nRows2, nColumns2);
 
-
+    // Create the matrices
     Matrix *m1 = matrix_create(nRows1, nColumns1);
 	matrix_set_random(m1);
 	matrix_print(m1);
+    printf("\n");
 	
 	Matrix *m2 = matrix_create(nRows2, nColumns2);
 	matrix_set_random(m2);
@@ -48,13 +49,14 @@ int main (int argc, char *argv[])
     int queueDim = 500;
     threadpool_init(&tp, queueDim, nPartitions);
 	
+    // Do the multiplication with threads and print the result
 	Matrix *result = matrix_multiplication_with_pool_threads(m1, m2, nPartitions, &tp);
     if (result == NULL) {
         fprintf(stderr, "Matrix multiplication error\n");
         exit(EXIT_FAILURE);
     }
 	matrix_print(result); 
-
+    // Destroy the matrices
 	matrix_destroy(m1);
 	matrix_destroy(m2);
 	matrix_destroy(result);
