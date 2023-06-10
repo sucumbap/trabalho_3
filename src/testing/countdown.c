@@ -7,7 +7,16 @@ void* countdown_thread(void* arg) {
     return NULL;
 }
 
-int main() {
+int main(int argc, char** argv) {
+    if(argc != 2) {
+        printf("Usage: %s <num_threads>\n", argv[0]);
+        return 1;
+    }
+    if (atoi(argv[1]) < 1) {
+        printf("Number of threads must be greater than 0.\n");
+        return 1;
+    }
+    int NUM_THREADS = atoi(argv[1]);
     countdown_t cd;
     int initialValue = NUM_THREADS;
     int result = countdown_init(&cd, initialValue);

@@ -71,3 +71,36 @@ Teste do Exercicio 2:
         // to complete up
 
 Exercicio 3:
+    Path: Trabalho_3/src/countdown/*
+    Compile: make
+
+    Consiste numa biblioteca de funções que criam um contdown para um conjunto de threads e as executa.
+    Utiliza funçoes de biblioteca tipo pthread_mutex_lock e pthread_mutex_unlock para sincronizar as threads.
+    Requer a biblioteca do exercicio 1 para funcionar.
+
+Teste do Exercicio 3:
+    Path: Trabalho_3/src/testing/countdown.c && Trabalho_3/src/testing/countdown.h
+    Compile: make
+    Run: ./bin/countdown_test <number_of_threads>
+
+    O programa realiza um teste do mecanismo de sincronismo countdown_t. Ele cria várias threads que aguardam até que o valor do countdown alcance zero. Cada thread invoca a função countdown_wait para esperar, enquanto a thread principal usa countdown_down para decrementar o valor do countdown. Após a contagem regressiva, a thread principal aguarda a conclusão da thread criada com pthread_join e, em seguida, destrói a estrutura countdown_t usando countdown_destroy. O objetivo é demonstrar o uso do mecanismo de sincronismo countdown em um contexto de múltiplas threads.
+
+    Exemplo:
+        % ./bin/countdown_test 140
+        Countdown down: 139
+        Countdown down: 137
+        Countdown down: 136
+        .........
+        Countdown down: 11
+        Countdown down: 10
+        Countdown down: 9
+        Countdown down: 8
+        Countdown down: 7
+        Countdown down: 6
+        Countdown down: 5
+        Countdown down: 4
+        Countdown down: 3
+        Countdown down: 2
+        Countdown down: 1
+        Countdown down: 0
+        Thread finished waiting.
