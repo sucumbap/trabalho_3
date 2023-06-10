@@ -1,16 +1,21 @@
 #include "vector.h"
 
 int main( int argc, char *argv[] ) {
-    if (argc < 2) {
-        printf("Usage: %s <number of elements>\n", argv[0]);
+    if (argc < 3) {
+        printf("Usage: %s <number of elements> <numeber of threads>\n", argv[0]);
         return 1;
     }
     if (atoi(argv[1]) < 1) {
         printf("The number of elements must be greater than 0\n");
         return 1;
     }
+    if (atoi(argv[2]) < 1) {
+        printf("The number of threads must be greater than 0\n");
+        return 1;
+    }
 
     int dim = atoi(argv[1]);
+    int NTHREADS = atoi(argv[2]);
     int *values = malloc(dim * sizeof(int));
 
 
