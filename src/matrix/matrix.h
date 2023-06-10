@@ -39,6 +39,7 @@ typedef struct {
     int endRow;
 } ThreadData;
 
+
 Matrix *matrix_create         (int nRows, int nColumns);
 
 void    matrix_destroy        (Matrix *matrix);
@@ -54,6 +55,8 @@ Matrix *matrix_multiplication (const Matrix *m1, const Matrix *m2);
 void *sumTask(void *args);
 
 void *matrix_multiply_thread(void *arg);
+
+void matrix_multiply_thread_wrapper(void* arg);
 
 Matrix *matrix_multiplication_with_threads(Matrix *m1, Matrix *m2, int nThreads);
 

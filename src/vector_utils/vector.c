@@ -27,8 +27,8 @@ void find_larger_and_fill_parallel(int v[], int dim, int numberOfThreads) {
         pthread_join(threads[i], NULL);
     }
 
-    max_value = vec->data[0];  // Update max_value with the maximum value found by the threads
-    for (i = 1; i < dim; i++) { // Iterate over the vector size, not the number of threads
+    max_value = vec->data[0];
+    for (i = 1; i < dim; i++) {
         if (vec->data[i] > max_value) {
             max_value = vec->data[i];
         }
@@ -37,7 +37,6 @@ void find_larger_and_fill_parallel(int v[], int dim, int numberOfThreads) {
     for (i = 0; i < dim; i++) {
         v[i] = max_value;
     }
-
     free(vec);
     free(threads);
     free(data);
@@ -58,7 +57,6 @@ void *find_larger_and_fill_parallel_thread(void *arg) {
     }
     sot_barrier_wait(barrier);
 
-    // Update the max_value in the thread_data structure
     data->max_value = max_value;
 
     return NULL;

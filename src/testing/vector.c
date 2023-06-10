@@ -12,7 +12,7 @@ int main( int argc, char *argv[] ) {
 
     int dim = atoi(argv[1]);
     int *values = malloc(dim * sizeof(int));
-    int numberOfThreads = 4;
+
 
     srand(time(NULL));
 
@@ -23,7 +23,7 @@ int main( int argc, char *argv[] ) {
     }
     printf("\n");
 
-    find_larger_and_fill_parallel(values, dim, numberOfThreads);
+    find_larger_and_fill_parallel(values, dim, NTHREADS);
 
     printf("Output: ");
     for (int i = 0; i < dim; i++) {

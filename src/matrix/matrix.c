@@ -1,5 +1,5 @@
 #include "matrix.h"
-
+#include <unistd.h>
 /**
  * matrix_create
  * 
@@ -223,33 +223,39 @@ Matrix *matrix_multiplication_with_processes(Matrix *m1, Matrix *m2, int nProces
 
 	return result;
 }
-Matrix * matrix_multiplication_with_pool_threads (Matrix *m1, Matrix *m2,int nPartitions, threadpool_t *tp) {
-	if (m1->nColumns != m2->nRows) return NULL;
-	
-	Matrix *result = matrix_create(m1->nRows, m2->nColumns);
-	if (result == NULL) return NULL;
 
-	int rowsPerThread = result->nRows / nPartitions;
-	int extraRows = result->nRows % nPartitions;
-	int currentRow = 0;
+void matrix_multiply_thread_wrapper(void* arg) {
+    ThreadData* threadData = (ThreadData*)arg;
+    matrix_multiply_thread(threadData);
+}
 
-	for (int i = 0; i < nPartitions; ++i) {
-		ThreadData *threadData = malloc(sizeof(ThreadData));
-		threadData->m1 = m1;
-		threadData->m2 = m2;
-		threadData->result = result;
-		threadData->startRow = currentRow;
+Matrix* matrix_multiplication_with_pool_threads(Matrix* m1, Matrix* m2, int nPartitions, threadpool_t* tp) {
+    if (m1->nColumns != m2->nRows) return NULL;
 
-		int rows = rowsPerThread + (extraRows > 0 ? 1 : 0);
-		threadData->endRow = currentRow + rows;
+    Matrix* result = matrix_create(m1->nRows, m2->nColumns);
+    if (result == NULL) return NULL;
 
-		currentRow += rows;
-		extraRows--;
+    int rowsPerThread = result->nRows / nPartitions;
+    int extraRows = result->nRows % nPartitions;
+    int currentRow = 0;
 
-		threadpool_submit(tp, matrix_multiply_thread, (void *)threadData);
-	}
+    for (int i = 0; i < nPartitions; ++i) {
+        ThreadData* threadData = malloc(sizeof(ThreadData));
+        threadData->m1 = m1;
+        threadData->m2 = m2;
+        threadData->result = result;
+        threadData->startRow = currentRow;
 
-	threadpool_destroy(tp);
+        int rows = rowsPerThread + (extraRows > 0 ? 1 : 0);
+        threadData->endRow = currentRow + rows;
 
-	return result;
+        currentRow += rows;
+        extraRows--;
+
+        threadpool_submit(tp, matrix_multiply_thread_wrapper, (void*)threadData);
+    }
+
+    threadpool_destroy(tp);
+
+    return result;
 }
