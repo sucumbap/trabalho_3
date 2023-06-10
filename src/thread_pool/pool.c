@@ -73,7 +73,7 @@ void *threadpool_thread(void *threadpool) {
     }
 
     tp->started--;
-
+    printf("Thread exiting\n");
     pthread_exit(NULL);
     return NULL;
 }

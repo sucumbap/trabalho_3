@@ -101,3 +101,47 @@ Teste do Exercicio 3:
         Countdown down: 1
         Countdown down: 0
         Thread finished waiting.
+
+Exercicio 4:
+    Path: Trabalho_3/src/thread_pool/*
+    Compile: make
+
+    Consiste numa biblioteca de funções que implementam um pool de threads.
+    Onde as tarefas não são executadas por uma thread especifica mas sim por uma thread que esteja disponivel.
+
+Teste do Exercicio 4:
+    Path: Trabalho_3/src/testing/pool.c && Trabalho_3/src/testing/pool.h
+    Compile: make
+    Run: ./bin/thread_pool_test <iterations> <min> <max> <nthreads> <queueDim>
+
+    O programa realiza um teste do mecanismo de sincronismo thread_pool_t. Ele cria várias threads que operam operações aritmetricas ao acaso e as executa. Mantendo um olho para o estado atual da pool de threads, e o numero de threads que estão a executar tarefas.
+
+    Exemplo:
+        ./bin/thread_pool_test 10 10 50 14 100 
+        Thread pool initialized with 14 threads and a queue size of 100
+        Submitting task 0 to the thread pool
+        Submitting task 1 to the thread pool
+        Submitting task 2 to the thread pool
+        Submitting task 3 to the thread pool
+        Submitting task 4 to the thread pool
+        Submitting task 5 to the thread pool
+        Submitting task 6 to the thread pool
+        Submitting task 7 to the thread pool
+        Submitting task 8 to the thread pool
+        Submitting task 9 to the thread pool
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread exiting
+        Thread pool destroyed
+
