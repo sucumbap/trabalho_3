@@ -31,6 +31,11 @@ int countdown_wait(countdown_t *cd) {
 int countdown_down(countdown_t *cd) {
     pthread_mutex_lock(&cd->barrier.mutex);
     cd->value--;
+
+    if (cd->value == 0) {
+        pthread_cond_broadcast(&cd->barrier.cond);
+    }
+
     pthread_mutex_unlock(&cd->barrier.mutex);
     return 0;
 }

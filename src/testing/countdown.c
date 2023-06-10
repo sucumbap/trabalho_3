@@ -1,59 +1,40 @@
 #include "countdown.h"
 
-void* countdown_test(void* arg) {
+void* countdown_thread(void* arg) {
     countdown_t* cd = (countdown_t*)arg;
-
-    printf("Thread %lu started\n", (unsigned long)pthread_self());
-
-    for (int i = 0; i < 1000000; i++) {
-        int j = i * i;
-        j--;
-    }
-    
-    countdown_wait(cd);  // Wait until the countdown reaches zero
-    
-    printf("Thread %lu finished\n", (unsigned long)pthread_self());
-    
+    countdown_wait(cd);
+    printf("Thread finished waiting.\n");
     return NULL;
 }
 
 int main() {
     countdown_t cd;
-    countdown_init(&cd, NUM_THREADS);
-
-    pthread_t threads[NUM_THREADS];
-    int i;
-    for (i = 0; i < NUM_THREADS; i++) {
-        pthread_create(&threads[i], NULL, countdown_test, &cd);
+    int initialValue = NUM_THREADS;
+    int result = countdown_init(&cd, initialValue);
+    if (result == -1) {
+        printf("Countdown initialization failed.\n");
+        return 1;
     }
 
-    // Do some work before countdown
-    
-    countdown_down(&cd);  // Decrease the countdown value
-    
-    // Continue with other tasks before countdown
-    
-    countdown_down(&cd);  // Decrease the countdown value
-    
-    // Continue with other tasks before countdown
-    
-    countdown_down(&cd);  // Decrease the countdown value
-    
-    // Continue with other tasks before countdown
-    
-    countdown_down(&cd);  // Decrease the countdown value
-    
-    // Continue with other tasks before countdown
-    
-    countdown_down(&cd);  // Decrease the countdown value
-    
-    // Continue with other tasks before countdown
-    
-    for (i = 0; i < NUM_THREADS; i++) {
-        pthread_join(threads[i], NULL);
+    pthread_t thread;
+    result = pthread_create(&thread, NULL, countdown_thread, (void*)&cd);
+    if (result != 0) {
+        printf("Failed to create thread.\n");
+        return 1;
     }
 
-    countdown_destroy(&cd);
+    for (int i = 0; i < initialValue - 1; i++) {
+        countdown_down(&cd);
+        printf("Countdown down: %d\n", cd.value);
+    }
+
+    pthread_join(thread, NULL);
+    
+    result = countdown_destroy(&cd);
+    if (result == -1) {
+        printf("Countdown destruction failed.\n");
+        return 1;
+    }
 
     return 0;
 }
