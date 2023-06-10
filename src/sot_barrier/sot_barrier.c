@@ -1,7 +1,9 @@
 #include "sot_barrier.h"
 
-int sot_barrier_init    (sot_barrier_t *barrier, int numberOfThreads) {
-    if(numberOfThreads <= 0) return -1; // error
+int sot_barrier_init(sot_barrier_t *barrier, int numberOfThreads) {
+    if(numberOfThreads <= 0){
+        return -1;
+    }
     barrier->nThreads = numberOfThreads;
     barrier->nThreadsReceived = 0;
 
